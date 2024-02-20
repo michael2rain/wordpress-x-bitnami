@@ -13,38 +13,38 @@ services:
   # -- MARIADB -- #
   mariadb:
     image: 'docker.io/bitnami/mariadb:10.6'
-    container_name: $SUB_DOMAIN-$INSTANCE_NAME-db
+    container_name: $INSTANCE_NAME-db
     restart: always
     env_file:
       # "stack.env" only for Portainer | Change to ".env" for local deployment
-      - stack.env
+      - .env
     volumes:
       - 'mariadb_data:/bitnami/mariadb'
     networks:
       - backend
     environment:
-      - MARIADB_ROOT_USER=root_$SUB_DOMAIN_db
-      - MARIADB_DATABASE=$SUB_DOMAIN_db
-      - MARIADB_USER=$SUB_DOMAIN_demon
+      - MARIADB_DATABASE=$INSTANCE_NAME
+      - MARIADB_USER=$WORDPRESS_USERNAME-db
+      - MARIADB_ROOT_USER=root-$WORDPRESS_USERNAME-db
 
   # -- MEMCACHED -- #
   memcached:
     image: 'bitnami/memcached:latest'
-    container_name: $SUB_DOMAIN-$INSTANCE_NAME-cache
+    container_name: $INSTANCE_NAME-cache
     restart: always
     env_file:
-      - stack.env
+      - .env
     networks:
       - backend
 
   # -- WORDPRESS -- #
   wordpress:
     image: 'bitnami/wordpress-nginx:6.4.2'
-    container_name: $SUB_DOMAIN-$INSTANCE_NAME-wp
+    container_name: $INSTANCE_NAME-wp
     restart: always
     env_file:
       # "stack.env" only for Portainer | Change to ".env" for local deployment
-      - stack.env
+      - .env
     depends_on:
       - mariadb
       - memcached
@@ -55,10 +55,10 @@ services:
       - backend
     environment:
       # -- DB CONFIG -- #
-      - WORDPRESS_DATABASE_NAME=$SUB_DOMAIN_db
-      - WORDPRESS_DATABASE_USER=$SUB_DOMAIN_demon
+      - WORDPRESS_DATABASE_USER=$WORDPRESS_USERNAME-db
       - WORDPRESS_DATABASE_PASSWORD=$MARIADB_PASSWORD
-      - WORDPRESS_TABLE_PREFIX=$SUB_DOMAINx_
+      - WORDPRESS_DATABASE_NAME=$INSTANCE_NAME
+      - WORDPRESS_TABLE_PREFIX=$SUB_DOMAIN
 
       # -- PHP CONFIG -- #
       - PHP_MAX_EXECUTION_TIME=900
@@ -76,14 +76,15 @@ services:
 
     labels:
       - traefik.enable=true
-      - traefik.http.routers.$SUB_DOMAIN-$INSTANCE_NAME-wp.entrypoints=https
+      - traefik.http.routers.$INSTANCE_NAME-wp.entrypoints=https
       # Subdomain rule as a development environment
-      - traefik.http.routers.$SUB_DOMAIN-$INSTANCE_NAME-wp.rule=Host(`${SUB_DOMAIN}.${DOMAIN_HOST}`)
+      - traefik.http.routers.$INSTANCE_NAME-wp.rule=Host(`${SUB_DOMAIN}.${DOMAIN_HOST}`)
       # SSL resolver
-      - traefik.http.routers.$SUB_DOMAIN-$INSTANCE_NAME-wp.tls=true
-      - traefik.http.routers.$SUB_DOMAIN-$INSTANCE_NAME-wp.tls.certresolver=letsencrypt
-      # Middlewares: No index rules
-      - traefik.http.middlewares.$SUB_DOMAIN-$INSTANCE_NAME.headers.customresponseheaders.X-Robots-Tag=noindex,nofollow,nosnippet,notranslate,noarchive,nosnippet
+      - traefik.http.routers.$INSTANCE_NAME-wp.tls=true
+      - traefik.http.routers.$INSTANCE_NAME-wp.tls.certresolver=letsencrypt
+      # Middleware: NO-INDEX
+      - traefik.http.routers.$INSTANCE_NAME-wp.middlewares=$INSTANCE_NAME-wp@docker
+      - traefik.http.middlewares.$INSTANCE_NAME-wp.headers.customResponseHeaders.X-Robots-Tag="noindex,nofollow,nosnippet,notranslate,noarchive,nosnippet"
 
 networks:
   proxy:
