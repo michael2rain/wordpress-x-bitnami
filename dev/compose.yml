@@ -24,8 +24,8 @@ services:
       - backend
     environment:
       - MARIADB_DATABASE=${SUB_DOMAIN}_database
-      - MARIADB_USER=${WORDPRESS_USERNAME}_db
-      - MARIADB_ROOT_USER=root_${WORDPRESS_USERNAME}_db
+      - MARIADB_USER=${WORDPRESS_USERNAME}
+      - MARIADB_ROOT_USER=root_${WORDPRESS_USERNAME}
 
   # -- MEMCACHED -- #
   memcached:
@@ -37,7 +37,7 @@ services:
 
   # -- WORDPRESS -- #
   wordpress:
-    image: 'bitnami/wordpress-nginx:6.4.2'
+    image: 'bitnami/wordpress-nginx:6.3.0'
     container_name: ${INSTANCE_NAME}-wp
     restart: always
     env_file:
@@ -53,7 +53,7 @@ services:
       - backend
     environment:
       # -- DB CONFIG -- #
-      - WORDPRESS_DATABASE_USER=${WORDPRESS_USERNAME}_db
+      - WORDPRESS_DATABASE_USER=${WORDPRESS_USERNAME}
       - WORDPRESS_DATABASE_PASSWORD=${MARIADB_PASSWORD}
       - WORDPRESS_DATABASE_NAME=${SUB_DOMAIN}_database
       - WORDPRESS_TABLE_PREFIX=${SUB_DOMAIN}_
