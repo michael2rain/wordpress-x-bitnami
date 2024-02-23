@@ -23,9 +23,9 @@ services:
     networks:
       - backend
     environment:
-      - MARIADB_DATABASE=${INSTANCE_NAME}
-      - MARIADB_USER=${WORDPRESS_USERNAME}-db
-      - MARIADB_ROOT_USER=root-${WORDPRESS_USERNAME}-db
+      - MARIADB_DATABASE=${SUB_DOMAIN}_database
+      - MARIADB_USER=${WORDPRESS_USERNAME}_db
+      - MARIADB_ROOT_USER=root_${WORDPRESS_USERNAME}_db
 
   # -- MEMCACHED -- #
   memcached:
@@ -53,9 +53,9 @@ services:
       - backend
     environment:
       # -- DB CONFIG -- #
-      - WORDPRESS_DATABASE_USER=${WORDPRESS_USERNAME}-db
+      - WORDPRESS_DATABASE_USER=${WORDPRESS_USERNAME}_db
       - WORDPRESS_DATABASE_PASSWORD=${MARIADB_PASSWORD}
-      - WORDPRESS_DATABASE_NAME=${INSTANCE_NAME}
+      - WORDPRESS_DATABASE_NAME=${SUB_DOMAIN}_database
       - WORDPRESS_TABLE_PREFIX=${SUB_DOMAIN}_
 
       # -- PHP CONFIG -- #
