@@ -81,8 +81,8 @@ services:
       - traefik.http.routers.${INSTANCE_NAME}-wp.tls=true
       - traefik.http.routers.${INSTANCE_NAME}-wp.tls.certresolver=letsencrypt
       # Middleware: NO-INDEX
-      - traefik.http.routers.${INSTANCE_NAME}-wp.middlewares=${INSTANCE_NAME}-wp@docker
-      - traefik.http.middlewares.${INSTANCE_NAME}-wp.headers.customResponseHeaders.X-Robots-Tag="noindex,nofollow,nosnippet,notranslate,noarchive,nosnippet"
+      # - traefik.http.routers.${INSTANCE_NAME}-wp.middlewares=${INSTANCE_NAME}-wp@docker
+      # - traefik.http.middlewares.${INSTANCE_NAME}-wp.headers.customResponseHeaders.X-Robots-Tag="noindex,nofollow,nosnippet,notranslate,noarchive,nosnippet"
 
 networks:
   proxy:
