@@ -76,12 +76,12 @@ services:
       - traefik.enable=true
       - traefik.http.routers.${INSTANCE_NAME}-wp.entrypoints=https
       # Subdomain rule as a development environment
-      - traefik.http.routers.$SUB_DOMAIN-$INSTANCE_NAME-wp.rule=Host(`${SUB_DOMAIN}.${DOMAIN_HOST}` , `${DOMAIN_HOST}`)
+      - traefik.http.routers.${INSTANCE_NAME}-wp.rule=Host(`${SUB_DOMAIN}.${DOMAIN_HOST}` , `${DOMAIN_HOST}`)
       # SSL resolver
       - traefik.http.routers.${INSTANCE_NAME}-wp.tls=true
       - traefik.http.routers.${INSTANCE_NAME}-wp.tls.certresolver=letsencrypt
       # Middlewares
-      - traefik.http.routers.$SUB_DOMAIN-$INSTANCE_NAME-wp.middlewares=redirect-www-to-non-www@file
+      - traefik.http.routers.${INSTANCE_NAME}-wp.middlewares=redirect-www-to-non-www@file
 
 networks:
   proxy:
