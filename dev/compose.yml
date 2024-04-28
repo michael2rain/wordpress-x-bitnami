@@ -34,6 +34,8 @@ services:
     restart: always
     networks:
       - backend
+    environment:
+      - MEMCACHED_CACHE_SIZE=256
 
   # -- WORDPRESS -- #
   wordpress:
