@@ -14,7 +14,7 @@ services:
   mariadb:
     image: 'docker.io/bitnami/mariadb:10.6'
     container_name: ${INSTANCE_NAME}-db
-    restart: always
+    restart: on-failure
     env_file:
       # "stack.env" only for Portainer | Change to ".env" for local deployment
       - stack.env
@@ -31,7 +31,7 @@ services:
   memcached:
     image: 'bitnami/memcached:latest'
     container_name: ${INSTANCE_NAME}-cache
-    restart: always
+    restart: on-failure
     networks:
       - backend
 
@@ -39,7 +39,7 @@ services:
   wordpress:
     image: 'bitnami/wordpress-nginx:6.3.0'
     container_name: ${INSTANCE_NAME}-wp
-    restart: always
+    restart: on-failure
     env_file:
       # "stack.env" only for Portainer | Change to ".env" for local deployment
       - stack.env
